@@ -8,7 +8,6 @@ import datetime
 import jsonpickle
 import os
 from dotenv import load_dotenv
-from .sequence import StringCounter
 #...
 
 # load dotenv in the base root
