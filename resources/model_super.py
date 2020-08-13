@@ -99,23 +99,23 @@ term_schema = TermSchema()
 terms_schema = TermSchema(many=True)
 
 
-class Admin(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(255))
-    phone = db.Column(db.String(255))
-    role = db.Column(db.String(50))
-    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+# class Admin(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     email = db.Column(db.String(50), unique=True)
+#     password = db.Column(db.String(255))
+#     phone = db.Column(db.String(255))
+#     role = db.Column(db.String(50))
+#     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
+#     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
-    def __repr__(self):
-        return '<Admin %s>' % self.email
+#     def __repr__(self):
+#         return '<Admin %s>' % self.email
 
 
-class AdminSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "email", "phone", "role", "school_id")
+# class AdminSchema(ma.Schema):
+#     class Meta:
+#         fields = ("id", "email", "phone", "role", "school_id")
 
 
 # admin_schema = AdminSchema()
@@ -169,23 +169,23 @@ head_teacher_schema = HeadTeacherSchema()
 head_teachers_schema = HeadTeacherSchema(many=True)
 
 
-class Teacher(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(255))
-    phone = db.Column(db.String(255))
-    role = db.Column(db.String(50))
-    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+# class Teacher(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     email = db.Column(db.String(50), unique=True)
+#     password = db.Column(db.String(255))
+#     phone = db.Column(db.String(255))
+#     role = db.Column(db.String(50))
+#     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
+#     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
-    def __repr__(self):
-        return '<Teacher %s>' % self.email
+#     def __repr__(self):
+#         return '<Teacher %s>' % self.email
 
 
-class TeacherSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "email", "phone", "role", "school_id")
+# class TeacherSchema(ma.Schema):
+#     class Meta:
+#         fields = ("id", "email", "phone", "role", "school_id")
 
 
 # teacher_schema = TeacherSchema()
@@ -258,29 +258,29 @@ books_schema = BookSchema(many=True)
 # student_schema = StudentSchema()
 # students_schema = StudentSchema(many=True)
 
-class Parent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(255))
-    phone = db.Column(db.String(255))
-    role = db.Column(db.String(50))
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+# class Parent(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(50))
+#     email = db.Column(db.String(50), unique=True)
+#     password = db.Column(db.String(255))
+#     phone = db.Column(db.String(255))
+#     role = db.Column(db.String(50))
+#     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+#     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
+#     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
-    def __repr__(self):
-        return '<Student %s>' % self.name
+#     def __repr__(self):
+#         return '<Student %s>' % self.name
 
 
-class ParentSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "name", "email", "phone", "student_id", "school_id")
+# class ParentSchema(ma.Schema):
+#     class Meta:
+#         fields = ("id", "name", "email", "phone", "student_id", "school_id")
 
 
-parent_schema = ParentSchema()
-parents_schema = ParentSchema(many=True)
+# parent_schema = ParentSchema()
+# parents_schema = ParentSchema(many=True)
 
 class Admission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
