@@ -6,6 +6,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
 import datetime
 import jsonpickle
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 
