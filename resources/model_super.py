@@ -352,7 +352,7 @@ class User(db.Model):
     role = db.Column(db.Integer)
     activation = db.Column(db.Integer)
     ref_student_id = db.Column(db.Integer, db.ForeignKey('user.id')) #Reference for Parent
-    ref_parent_id = db.Column(db.Integer, db.ForeignKey('parent.id')) #Reference for Student
+    ref_parent_id = db.Column(db.Integer, db.ForeignKey('user.id')) #Reference for Student
     student_id = db.Column(db.Integer) #generated_auto
     birth_date = db.Column(db.String(255))
     id_number = db.Column(db.String(1024))
