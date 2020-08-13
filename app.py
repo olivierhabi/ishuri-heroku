@@ -8,7 +8,8 @@ import datetime
 import jsonpickle
 import os
 from dotenv import load_dotenv
-#...
+from resources.super import post
+
 
 # load dotenv in the base root
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
@@ -27,6 +28,9 @@ api = Api(app)
 app.config['JWT_SECRET_KEY'] = str(secret_key)
 jwt = JWTManager(app)
 
+@app.before_request
+def before_request_func():
+    post()
 
 from resources.routes import initialize_routes
 

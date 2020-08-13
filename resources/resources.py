@@ -18,8 +18,7 @@ import datetime
 #teacher
 #HeadTeacher
 
-
-#school
+  
 
 
 class UserListResource(Resource):

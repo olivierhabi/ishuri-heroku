@@ -56,10 +56,7 @@ class School(db.Model):
     bank_accounts = db.Column(db.String(1280))
     location = db.Column(db.String(1280))
     term = db.relationship("Term")
-    admin = db.relationship("Admin")
-    libralian = db.relationship("Libralian")
-    head_teacher = db.relationship("HeadTeacher")
-    teacher = db.relationship("Teacher")
+    admin = db.relationship("User")
     classes = db.relationship("Classes")
     book = db.relationship("Book")
     
