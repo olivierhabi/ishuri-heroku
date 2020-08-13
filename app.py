@@ -30,6 +30,7 @@ jwt = JWTManager(app)
 
 from resources.routes import initialize_routes
 
+
 # initialize_db(app)
 initialize_routes(api)
 if __name__ == '__main__':

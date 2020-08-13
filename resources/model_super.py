@@ -8,8 +8,6 @@ import datetime
 import jsonpickle
 import os
 from dotenv import load_dotenv
-from .sequence import StringCounter
-#...
 
 # load dotenv in the base root
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
@@ -19,6 +17,7 @@ load_dotenv(dotenv_path)
 consumer_key = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(consumer_key)
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
@@ -80,7 +79,9 @@ schools_schema = SchoolSchema(many=True)
 class Term(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000))
-    days = db.Column(db.String(1024))
+    academic_year = db.Column(db.String(1024))
+    start_date = db.Column(db.String(1024))
+    end_date = db.Column(db.String(1024))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
@@ -90,7 +91,7 @@ class Term(db.Model):
 
 class TermSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "days", "school_id", "created_date")
+        fields = ("id", "name", "academic_year", "start_date","end_date", "school_id", "created_date")
 
 
 term_schema = TermSchema()
@@ -116,8 +117,8 @@ class AdminSchema(ma.Schema):
         fields = ("id", "email", "phone", "role", "school_id")
 
 
-admin_schema = AdminSchema()
-admins_schema = AdminSchema(many=True)
+# admin_schema = AdminSchema()
+# admins_schema = AdminSchema(many=True)
 
 
 class Libralian(db.Model):
@@ -139,8 +140,8 @@ class LibralianSchema(ma.Schema):
         fields = ("id", "email", "phone", "role", "school_id")
 
 
-libralian_schema = LibralianSchema()
-libralians_schema = LibralianSchema(many=True)
+# libralian_schema = LibralianSchema()
+# libralians_schema = LibralianSchema(many=True)
 
 
 
@@ -186,15 +187,15 @@ class TeacherSchema(ma.Schema):
         fields = ("id", "email", "phone", "role", "school_id")
 
 
-teacher_schema = TeacherSchema()
-teachers_schema = TeacherSchema(many=True)
+# teacher_schema = TeacherSchema()
+# teachers_schema = TeacherSchema(many=True)
 
 
 class Classes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1280))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    student = db.relationship("Student")
+    # student = db.relationship("Student")
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
@@ -225,36 +226,36 @@ class Book(db.Model):
 
 class BookSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "book_number", "school_id")
+        fields = ("id", "name","ssn_number", "book_number", "school_id")
 
 
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 
-class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(255))
-    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
-    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    parent = db.relationship("Parent")
-    admission = db.relationship("Admission")
-    role = db.Column(db.String(50))
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+# class Student(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(50))
+#     email = db.Column(db.String(50), unique=True)
+#     password = db.Column(db.String(255))
+#     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
+#     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
+#     parent = db.relationship("Parent")
+#     # admission = db.relationship("Admission")
+#     role = db.Column(db.String(50))
+#     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
-    def __repr__(self):
-        return '<Student %s>' % self.name
+#     def __repr__(self):
+#         return '<Student %s>' % self.name
 
 
-class StudentSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "name", "email", "class_id", "school_id")
+# class StudentSchema(ma.Schema):
+#     class Meta:
+#         fields = ("id", "name", "email", "class_id", "school_id")
 
 
-student_schema = StudentSchema()
-students_schema = StudentSchema(many=True)
+# student_schema = StudentSchema()
+# students_schema = StudentSchema(many=True)
 
 class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -282,41 +283,121 @@ parents_schema = ParentSchema(many=True)
 
 class Admission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    admited = db.Column(db.Boolean)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    name = db.Column(db.String(1024))
+    email = db.Column(db.String(1024))
+    password = db.Column(db.String(1024))
+    id_number = db.Column(db.String(1024))
+    birth_date = db.Column(db.String(1024))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-
     def __repr__(self):
-        return '<student_id %s>' % self.student_id
+        return '<firstname %s>' % self.firstname
 
 
 class AdmissionSchema(ma.Schema):
     class Meta:
-        fields = ("id", "admited", "student_id", "school_id")
+        fields = ("id", "name","email","birth_date", "password", "id_number", "school_id", "created_date")
 
 
 admission_schema = AdmissionSchema()
 admissions_schema = AdmissionSchema(many=True)
 
 class AdmissionLetter(db.Model):
-    payment_key = db.Column(db.Integer, db.Sequence('payment_seq'), unique=True, primary_key=True)
-    letter = db.Column(db.String(50))
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1024))
+    email = db.Column(db.String(1024))
+    password = db.Column(db.String(1024))
+    id_number = db.Column(db.String(1024))
+    birth_date = db.Column(db.String(1024))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
 
     def __repr__(self):
-        return '<payment_key %s>' % self.payment_key
+        return '<name %s>' % self.name
 
 
 class AdmissionLetterSchema(ma.Schema):
     class Meta:
-        fields = ("id", "payment_key", "admited", "letter", "student_id", "school_id")
+        fields = ("id", "name", "email", "password", "id_number", "birth_date", "school_id")
 
 
 admission_letter_schema = AdmissionLetterSchema()
 admission_letters_schema = AdmissionLetterSchema(many=True)
 
+# 1: Student add (student card number)
+# 2: Parent
+# 3: Teacher
+# 4: HeadTeacher
+# 5: School Admin
+# 6: Super User
+# 7: Librarian
+# 8: Pref "add"
+
+#ACTIVATION CODE
+
+# 1: Activated
+# 2: Deactivated
+
+
+class User(db.Model):
+    prefix = "USER"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1024))
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(255))
+    phone = db.Column(db.String(1024))
+    role = db.Column(db.Integer)
+    activation = db.Column(db.Integer)
+    ref_student_id = db.Column(db.Integer, db.ForeignKey('user.id')) #Reference for Parent
+    ref_parent_id = db.Column(db.Integer, db.ForeignKey('parent.id')) #Reference for Student
+    student_id = db.Column(db.Integer) #generated_auto
+    birth_date = db.Column(db.String(255))
+    id_number = db.Column(db.String(1024))
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
+    past_class = db.Column(db.Integer, db.ForeignKey('classes.id'))
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
+    
+    def __repr__(self):
+        return '<User %s>' % self.name
+
+
+class Userchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "email", "phone", 'role' , 
+        'ref_student_id','activation', 'ref_parent_id', 'student_id',
+        'birth_date', 'class_id', 'past_class','id_number', 'school_id')
+
+
+user_schema = Userchema()
+users_schema = Userchema(many=True)
+
+# super Admin
+super_admin_schema = Userchema(only=('id','name', 'email','phone','role'))
+super_admins_schema = Userchema(many=True)
+
+# Admin
+admin_schema = Userchema(only=('id','name', 'email','phone','school_id','role'))
+admins_schema = Userchema(many=True)
+
+# Librarian
+libralian_schema = Userchema(only=('id','name', 'email','phone','school_id','role'))
+libralians_schema = Userchema(many=True)
+
+# Parent
+parent_schema = Userchema(only=('id','name', 'email','phone','school_id','ref_student_id','role'))
+parents_schema = Userchema(many=True)
+
+
+# Teacher
+teacher_schema = Userchema(only=('id','name', 'email','phone','school_id','role'))
+teachers_schema = Userchema(many=True)
+
+# HeadTeacher
+head_teacher_schema = Userchema(only=('id','name', 'email','phone','school_id','role'))
+head_teachers_schema = Userchema(many=True)
+
+#Student
+student_schema = Userchema(only=('id','name', 'email','birth_date','id_number','phone','school_id','role'))
+students_schema = Userchema(many=True)
