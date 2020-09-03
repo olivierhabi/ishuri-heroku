@@ -350,13 +350,14 @@ class User(db.Model):
     activation = db.Column(db.Integer)
     ref_student_id = db.Column(db.Integer, db.ForeignKey('user.id')) #Reference for Parent
     ref_parent_id = db.Column(db.Integer, db.ForeignKey('user.id')) #Reference for Student
-    student_id = db.Column(db.Integer) #generated_auto
+    student_id = db.Column(db.String(15)) #generated_auto
     birth_date = db.Column(db.String(255))
     id_number = db.Column(db.String(1024))
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
     past_class = db.Column(db.Integer, db.ForeignKey('classes.id'))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    
+    created_date = db.Column(db.DateTime, default = datetime.datetime.strftime(datetime.datetime.today(), "%b %d %Y"))
+
     def __repr__(self):
         return '<User %s>' % self.name
 
@@ -365,7 +366,7 @@ class Userchema(ma.Schema):
     class Meta:
         fields = ("id", "name", "email", "phone", 'role' , 
         'ref_student_id','activation', 'ref_parent_id', 'student_id',
-        'birth_date', 'class_id', 'past_class','id_number', 'school_id')
+        'birth_date', 'class_id', 'past_class','id_number', 'school_id', 'created_date')
 
 
 user_schema = Userchema()
@@ -397,5 +398,5 @@ head_teacher_schema = Userchema(only=('id','name', 'email','phone','school_id','
 head_teachers_schema = Userchema(many=True)
 
 #Student
-student_schema = Userchema(only=('id','name', 'email','birth_date','id_number','phone','school_id','role'))
+student_schema = Userchema(only=('id','name', 'email','birth_date','id_number','phone','school_id','role', 'student_id', 'created_date'))
 students_schema = Userchema(many=True)

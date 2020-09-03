@@ -5,7 +5,7 @@ from .model_super import db
 from flask_bcrypt import generate_password_hash, check_password_hash
 from .model_super import super_schema, supers_schema, super_admin_schema, super_admins_schema, user_schema,admin_schema, admins_schema, libralian_schema, libralians_schema, parent_schema, parents_schema, teacher_schema, teachers_schema, school_schema, head_teacher_schema, head_teachers_schema, term_schema, class_schema, book_schema, student_schema, schools_schema, terms_schema, classes_schema, books_schema, students_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
-from sqlalchemy import exc
+from sqlalchemy import exc,  extract
 from flask_bcrypt import generate_password_hash, check_password_hash
 import datetime
 
@@ -50,7 +50,9 @@ class UserListResource(Resource):
                         "message": "You can't you're not Admin"
                     }
                     return error, 403
-                students = User.query.all()
+
+                students = User.query.filter(User.school_id == super.school_id).filter(User.role == 1).all()
+
                 return  students_schema.dump(students)
 
 
@@ -700,12 +702,31 @@ class UserListResource(Resource):
                 try:
                     body = request.get_json()
                     role = 1
+                    student_id = 2020
+
+                    todays_datetime = datetime.datetime(datetime.datetime.today().year,  datetime.datetime.today().month, datetime.datetime.today().day)
+                    students = User.query.filter(User.school_id == admin.school_id).filter(User.role == 1).filter(extract('year', User.created_date) == todays_datetime.year).all()
+
+                    student_number_gen = students.__len__() + 1
+                    pk_id = str(student_number_gen).zfill(5)
+
+                    school = School.query.get_or_404(admin.school_id)
+                    school_name = school.name
+
+                    words = school_name.split()
+                    letters = [word[0] for word in words]
+                    short_school = "".join(letters).upper()
+
+                    student_id = str(todays_datetime.year) + str(short_school) + pk_id
+
+
                     new_student = User(
                         name = request.json['name'],
                         email = request.json['email'],
                         phone = request.json['phone'],
                         password= generate_password_hash(request.json['password']).decode('utf8'),
                         role = role,
+                        student_id = student_id,
                         birth_date = request.json['birth_date'],
                         id_number = request.json['id_number'],
                         class_id = request.json['class_id'],
@@ -798,6 +819,7 @@ class UserResource(Resource):
 
                 student = User.query.get_or_404(req_id)
                 return student_schema.dump(student)
+
 
             if "book" in request_header:
                 user_id = get_jwt_identity()
@@ -1465,10 +1487,19 @@ class UserResource(Resource):
 
 
 
-
-
-
-
+class StudentResource(Resource):
+    @jwt_required
+    def get(self, req_id):
+        user_id = get_jwt_identity()
+        super = User.query.get_or_404(user_id)
+        if super.role != 5:
+            error = {
+                "status": 403,
+                "message": "You can't you're not Admin"
+            }
+            return error, 403
+        student = User.query.filter_by(student_id = req_id ).first()
+        return student_schema.dump(student)
 
 
         
