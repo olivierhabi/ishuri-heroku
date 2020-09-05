@@ -26,6 +26,7 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 app.config['JWT_SECRET_KEY'] = str(secret_key)
+app.config['PROPAGATE_EXCEPTIONS'] = True
 jwt = JWTManager(app)
 
 @app.before_request

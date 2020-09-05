@@ -21,6 +21,7 @@ app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = str(consumer_key)
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['PROPAGATE_EXCEPTIONS'] = True
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
