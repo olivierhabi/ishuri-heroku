@@ -22,11 +22,11 @@ secret_key = os.getenv('SQLALCHEMY_DATABASE_URI')
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =  str(consumer_key)
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['PROPAGATE_EXCEPTIONS'] = True
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
 app.config['JWT_SECRET_KEY'] = str(secret_key)
-app.config['PROPAGATE_EXCEPTIONS'] = True
 jwt = JWTManager(app)
 
 @app.before_request
