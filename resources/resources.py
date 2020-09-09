@@ -242,7 +242,9 @@ class UserListResource(Resource):
                     "status": 400,
                     "message": "Error Request-Type required " + str(e)
                 }
-                return errors, 400
+                return errors, 
+        except:
+            session.rollback()
 
 
     @jwt_required
@@ -285,6 +287,9 @@ class UserListResource(Resource):
                         "message": "Request is missing required fields " + str(e)
                     }
                     return errors, 400
+                except:
+                    session.rollback()
+                    raise
 
             
             elif "admin" in request_header:
@@ -342,6 +347,10 @@ class UserListResource(Resource):
                         "message": "Request is missing required fields " + str(e)
                     }
                     return errors, 400
+                except:
+                    session.rollback()
+                    raise
+
             elif "libralian" in request_header:
                 user_id = get_jwt_identity()
                 super =  User.query.get_or_404(user_id)
@@ -404,6 +413,9 @@ class UserListResource(Resource):
                         "message": "Request is missing required fields " + str(e)
                     }
                     return errors, 400
+                except:
+                    session.rollback()
+                    raise
 
             elif "parent" in request_header:
                 user_id = get_jwt_identity()
@@ -471,6 +483,11 @@ class UserListResource(Resource):
                 except TypeError:
                     return {"status": 400, "message": " 'NoneType Error' Expected object got nothing" }, 400
             
+            
+                except:
+                    session.rollback()
+                    raise
+
             elif "no_teacher" in request_header:
                 user_id = get_jwt_identity()
                 admin =  User.query.get_or_404(user_id)
@@ -532,6 +549,10 @@ class UserListResource(Resource):
                         "message": "Request is missing required fields" + str(e)
                     }
                     return errors, 400
+                except:
+                    session.rollback()
+                    raise
+
             elif "headteacher" in request_header:
                 try:
                     user_id = get_jwt_identity()
@@ -594,12 +615,18 @@ class UserListResource(Resource):
                         }
                         return errors, 400
 
+                    except:
+                        session.rollback()
+                        raise
+                    
+
                 except:
                     errors = {
                         "status": 400,
                         "message": "Only Admin can create Head Teacher"
                     }
                     return errors, 400
+                
                 
             elif "school" in request_header:
                 user_id = get_jwt_identity()
@@ -635,6 +662,10 @@ class UserListResource(Resource):
                         "message": "Request is missing required fields " + str(e)
                     }
                     return errors, 400
+
+                except:
+                    session.rollback()
+                    raise
 
             elif "term" in request_header:
                 try:
@@ -688,6 +719,9 @@ class UserListResource(Resource):
                             "message": "Request is missing required fields " + str(e)
                         }
                         return errors, 400
+                    except:
+                        session.rollback()
+                        raise
                 except:
                     errors = {
                         "status": 400,
@@ -744,6 +778,10 @@ class UserListResource(Resource):
                             "message": "Request is missing required fields"
                         }
                         return errors, 400
+                    
+                    except:
+                        session.rollback()
+                        raise
 
                 except:
                     errors = {
@@ -802,6 +840,10 @@ class UserListResource(Resource):
                             "message": "Request is missing required fields"
                         }
                         return errors, 400
+                    
+                    except:
+                        session.rollback()
+                        raise
 
                 except:
                     errors = {
@@ -897,7 +939,9 @@ class UserListResource(Resource):
                 except TypeError:
                     return {"status": 400, "message": " 'NoneType Error' Expected object got nothing" }, 400
 
-
+                except:
+                    session.rollback()
+                    raise
         
             else:
 
@@ -1232,6 +1276,10 @@ class UserResource(Resource):
                     }
                     return errors, 400
 
+                except:
+                    session.rollback()
+                    raise
+
 
             if "student" in request_header:
                 user_id = get_jwt_identity()
@@ -1292,6 +1340,10 @@ class UserResource(Resource):
                             "message": "Invalid Foreign Key"
                     }
                     return errors, 400
+                
+                except:
+                    session.rollback()
+                    raise
 
 
             if "book" in request_header:
@@ -1409,6 +1461,11 @@ class UserResource(Resource):
                         "message": "Email already taken try another"
                     }
                     return errors, 400
+                
+                except:
+                    session.rollback()
+                    raise
+
             if "headteacher" in request_header:
                 user_id = get_jwt_identity()
                 super = User.query.get_or_404(user_id)
@@ -1464,6 +1521,10 @@ class UserResource(Resource):
                         "message": "Email already taken try another"
                     }
                     return errors, 400
+
+                except:
+                    session.rollback()
+                    raise
 
             if "libralian" in request_header:
                 user_id = get_jwt_identity()
@@ -1522,6 +1583,10 @@ class UserResource(Resource):
                     }
                     return errors, 400
 
+                except:
+                    session.rollback()
+                    raise
+
 
             if "admin" in request_header:
                 user_id = get_jwt_identity()
@@ -1573,6 +1638,10 @@ class UserResource(Resource):
                         "message": "Email already taken try another"
                     }
                     return errors, 400
+
+                except:
+                    session.rollback()
+                    raise
 
             if "term" in request_header:
                 user_id = get_jwt_identity()
@@ -1801,7 +1870,8 @@ class UserResource(Resource):
                         "message": "Student is already registered"
                         }
 
-                    return message, 400
+                    return message, 
+                
             
             if "activation" in request_header:
                 user_id = get_jwt_identity()
@@ -1918,6 +1988,10 @@ class UserResource(Resource):
                 "message": "Error Request-Type required " + str(e)
             }
             return errors, 400
+            
+        except:
+            session.rollback()
+            raise
 
 
 
