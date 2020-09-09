@@ -195,13 +195,6 @@ class UserListResource(Resource):
                     }
                     return error, 403
 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 401,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 401
 
                 admin = User.query.all()
                 return  admins_schema.dump(admin)
@@ -217,13 +210,6 @@ class UserListResource(Resource):
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 401,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 401
 
                 supers = User.query.all()
                 return super_admins_schema.dump(supers)
@@ -237,13 +223,6 @@ class UserListResource(Resource):
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 401,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 401
 
                 schools = School.query.all()
                 return  schools_schema.dump(schools)
@@ -632,13 +611,6 @@ class UserListResource(Resource):
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 403,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 403
                 try:
                     new_school = School(
                         name =request.json['name'],
@@ -1154,13 +1126,7 @@ class UserResource(Resource):
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 403,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 403
+                
 
 
                 admin = User.query.get_or_404(req_id)
@@ -1568,13 +1534,7 @@ class UserResource(Resource):
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 403,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 403
+               
 
                 try:
                     admin= User.query.get_or_404(req_id)
@@ -1618,10 +1578,10 @@ class UserResource(Resource):
                 user_id = get_jwt_identity()
                 super = User.query.get_or_404(user_id)
 
-                if super.role != 5 and super.role != 6:
+                if super.role != 5:
                     error = {
                         "status": 403,
-                        "message": "You can't you're neither admin nor superadmin"
+                        "message": "You can't you're not admin"
                     }
                     return error, 403
                 
@@ -1661,20 +1621,13 @@ class UserResource(Resource):
                 user_id = get_jwt_identity()
                 super = User.query.get_or_404(user_id)
 
-                if super.role != 5 and super.role != 6:
+                if super.role != 6:
                     error = {
                         "status": 403,
-                        "message": "You can't you're neither admin nor superadmin"
+                        "message": "You can't you're not superadmin"
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 403,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 403
 
                 super= User.query.get_or_404(req_id)
 
@@ -1711,13 +1664,6 @@ class UserResource(Resource):
                     }
                     return error, 403
                     
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 403,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 403
 
                 school = School.query.get_or_404(req_id)
 
