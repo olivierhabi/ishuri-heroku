@@ -1,9 +1,9 @@
 from flask_restful import Api, Resource
 from .model_super import Super, User
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from .model_super import db
 from flask_bcrypt import generate_password_hash, check_password_hash
-from .model_super import super_schema, supers_schema, super_admin_schema, super_admins_schema, admin_schema, admins_schema, libralian_schema, libralians_schema, parent_schema, parents_schema 
+from .model_super import log_user_schema, super_schema, supers_schema, super_admin_schema, super_admins_schema, admin_schema, admins_schema, libralian_schema, libralians_schema, parent_schema, parents_schema 
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
 from sqlalchemy import exc
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -45,8 +45,10 @@ class UserLoginResource(Resource):
                         }
                         return errors, 401
                     expires = datetime.timedelta(days=7)
+
+                    log_user =  log_user_schema.dump(user)
                 
-                    access_token = create_access_token(identity=str(user.id), expires_delta=expires)
+                    access_token = create_access_token(identity=log_user, expires_delta=expires)
                     return {"status": 200, "message": "Successfully logged in",'token': access_token}, 200
 
                 except AttributeError:

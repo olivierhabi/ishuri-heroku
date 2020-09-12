@@ -18,7 +18,7 @@ class LetterListResource(Resource):
 
     @jwt_required
     def post(self):
-        user_id = get_jwt_identity()
+        user_id = get_jwt_identity()['id']
         admin = Admin.query.get_or_404(user_id)
 
         if admin.role != "admin":
@@ -71,7 +71,7 @@ class LetterResource(Resource):
 
     @jwt_required
     def patch(self, letter_id):
-        user_id = get_jwt_identity()
+        user_id = get_jwt_identity()['id']
         admin =  Admin.query.get_or_404(user_id)
         if admin.role != "admin":
             error = {
@@ -103,7 +103,7 @@ class LetterResource(Resource):
 
     @jwt_required
     def delete(self, letter_id):
-        user_id = get_jwt_identity()
+        user_id = get_jwt_identity()['id']
         admin =  Admin.query.get_or_404(user_id)
 
         if admin.role != "admin":

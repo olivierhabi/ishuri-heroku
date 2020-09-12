@@ -283,6 +283,9 @@ class Userchema(ma.Schema):
 user_schema = Userchema()
 users_schema = Userchema(many=True)
 
+log_user_schema = Userchema(only=('id','role'))
+log_users_schema = Userchema(many=True)
+
 # super Admin
 super_admin_schema = Userchema(only=('id','name', 'email','phone','role'))
 super_admins_schema = Userchema(many=True)

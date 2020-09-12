@@ -29,7 +29,7 @@ class UserListResource(Resource):
             
 
             if "parent" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -50,7 +50,7 @@ class UserListResource(Resource):
                 return  parents_schema.dump(parent)
 
             if "student" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -74,7 +74,7 @@ class UserListResource(Resource):
 
 
             if "book" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -96,7 +96,7 @@ class UserListResource(Resource):
 
 
             if "class" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -118,7 +118,7 @@ class UserListResource(Resource):
 
 
             if "no_teacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -139,7 +139,7 @@ class UserListResource(Resource):
                 return teachers_schema.dump(teacher)
                 
             elif "headteacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -162,7 +162,7 @@ class UserListResource(Resource):
 
 
             elif "libralian" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -185,7 +185,7 @@ class UserListResource(Resource):
                 return  libralians_schema.dump(libralians)
 
             elif "admin" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5 and super.role != 6:
@@ -201,8 +201,9 @@ class UserListResource(Resource):
 
 
             elif "superuser" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
+                
                 if super.role != 6:
                     error = {
                         "status": 403,
@@ -214,7 +215,7 @@ class UserListResource(Resource):
                 supers = User.query.all()
                 return super_admins_schema.dump(supers)
             elif "school" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 6:
                     error = {
@@ -293,7 +294,7 @@ class UserListResource(Resource):
 
             
             elif "admin" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super =  User.query.get_or_404(user_id)
 
                 
@@ -352,7 +353,7 @@ class UserListResource(Resource):
                     raise
 
             elif "libralian" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super =  User.query.get_or_404(user_id)
 
                 if super.role != 5:
@@ -418,7 +419,7 @@ class UserListResource(Resource):
                     raise
 
             elif "parent" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
 
                 if admin.role != 5:
@@ -489,7 +490,7 @@ class UserListResource(Resource):
                     raise
 
             elif "no_teacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
 
                 if admin.role != 5:
@@ -555,7 +556,7 @@ class UserListResource(Resource):
 
             elif "headteacher" in request_header:
                 try:
-                    user_id = get_jwt_identity()
+                    user_id = get_jwt_identity()['id']
                     admin =  User.query.get_or_404(user_id)
 
                     if admin.role != 5:
@@ -629,7 +630,8 @@ class UserListResource(Resource):
                 
                 
             elif "school" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
+
                 super = User.query.get_or_404(user_id)
                 if super.role != 6:
                     error = {
@@ -669,7 +671,7 @@ class UserListResource(Resource):
 
             elif "term" in request_header:
                 try:
-                    user_id = get_jwt_identity()
+                    user_id = get_jwt_identity()['id']
                     admin = User.query.get_or_404(user_id)
 
                     if admin.role != 5:
@@ -731,7 +733,7 @@ class UserListResource(Resource):
 
             elif "class" in request_header:
                 try:
-                    user_id = get_jwt_identity()
+                    user_id = get_jwt_identity()['id']
                     admin = User.query.get_or_404(user_id)
 
                     if admin.role != 5:
@@ -792,7 +794,7 @@ class UserListResource(Resource):
 
             elif "book" in request_header:
                 try:
-                    user_id = get_jwt_identity()
+                    user_id = get_jwt_identity()['id']
                     library = User.query.get_or_404(user_id)
 
                     if library.role != 7:
@@ -853,7 +855,7 @@ class UserListResource(Resource):
                     return errors, 400
 
             if "student" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin = User.query.get_or_404(user_id)
 
                 if admin.role != 5:
@@ -969,7 +971,7 @@ class UserResource(Resource):
             request_header = request.headers["Request-Type"]
 
             if "parent" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -990,7 +992,7 @@ class UserResource(Resource):
                 return parent_schema.dump(parent)
 
             if "student" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1012,7 +1014,7 @@ class UserResource(Resource):
 
 
             if "book" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 7:
                     error = {
@@ -1034,7 +1036,7 @@ class UserResource(Resource):
 
 
             if "class" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1055,7 +1057,7 @@ class UserResource(Resource):
                 return class_schema.dump(classes)
 
             if "no_teacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1076,7 +1078,7 @@ class UserResource(Resource):
                 return teacher_schema.dump(teacher)
 
             if "libralian" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1097,7 +1099,7 @@ class UserResource(Resource):
                 return libralian_schema.dump(library)
 
             elif "superuser" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 6:
                     error = {
@@ -1117,7 +1119,7 @@ class UserResource(Resource):
                 super = User.query.get_or_404(req_id)
                 return super_schema.dump(super)
             elif "school" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1138,7 +1140,7 @@ class UserResource(Resource):
                 return school_schema.dump(school)\
 
             elif "term" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1160,7 +1162,7 @@ class UserResource(Resource):
                 return term_schema.dump(term)
 
             elif "admin" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5 and super.role != 6:
@@ -1177,7 +1179,7 @@ class UserResource(Resource):
                 return admin_schema.dump(admin)
 
             elif "headteacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1218,7 +1220,7 @@ class UserResource(Resource):
             request_header = request.headers["Request-Type"]
 
             if "parent" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1282,7 +1284,7 @@ class UserResource(Resource):
 
 
             if "student" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1347,7 +1349,7 @@ class UserResource(Resource):
 
 
             if "book" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 7:
@@ -1378,7 +1380,7 @@ class UserResource(Resource):
                 return book_schema.dump(book)
 
             if "class" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5 and super.role != 3:
@@ -1406,7 +1408,7 @@ class UserResource(Resource):
                 return class_schema.dump(classes)
 
             if "no_teacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5 and super.role != 3:
@@ -1467,7 +1469,7 @@ class UserResource(Resource):
                     raise
 
             if "headteacher" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 5:
                     error = {
@@ -1527,7 +1529,7 @@ class UserResource(Resource):
                     raise
 
             if "libralian" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5 and super.role != 7:
@@ -1589,7 +1591,7 @@ class UserResource(Resource):
 
 
             if "admin" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5 and super.role != 6:
@@ -1644,7 +1646,7 @@ class UserResource(Resource):
                     raise
 
             if "term" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 5:
@@ -1687,7 +1689,7 @@ class UserResource(Resource):
 
 
             if "superuser" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
 
                 if super.role != 6:
@@ -1724,7 +1726,7 @@ class UserResource(Resource):
                 return super_schema.dump(super)
 
             if "school" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
                 if super.role != 6:
                     error = {
@@ -1782,7 +1784,7 @@ class UserResource(Resource):
 
             if "admission" in request_header:
             
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
                 if admin.role != 5:
                     error = {
@@ -1874,7 +1876,7 @@ class UserResource(Resource):
                 
             
             if "activation" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
                 if admin.role != 5:
                     error = {
@@ -1900,7 +1902,7 @@ class UserResource(Resource):
 
 
             if "de_activate" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
                 if admin.role != 5:
                     error = {
@@ -1925,7 +1927,7 @@ class UserResource(Resource):
             
 
             if "sch_activa" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
                 if admin.role != 6:
                     error = {
@@ -1951,7 +1953,7 @@ class UserResource(Resource):
             
 
             if "deact_school" in request_header:
-                user_id = get_jwt_identity()
+                user_id = get_jwt_identity()['id']
                 admin =  User.query.get_or_404(user_id)
                 if admin.role != 6:
                     error = {
@@ -1998,7 +2000,7 @@ class UserResource(Resource):
 class StudentResource(Resource):
     @jwt_required
     def get(self, req_id):
-        user_id = get_jwt_identity()
+        user_id = get_jwt_identity()['id']
         super = User.query.get_or_404(user_id)
         if super.role != 5:
             error = {

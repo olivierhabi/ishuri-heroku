@@ -11,7 +11,7 @@ import datetime
 class AdmissionListResource(Resource):
     @jwt_required
     def get(self):
-        user_id = get_jwt_identity()
+        user_id = get_jwt_identity()['id']
         admin = User.query.get_or_404(user_id)
 
         if admin.role != 5:
@@ -79,7 +79,7 @@ class AdmissionResource(Resource):
 
     @jwt_required
     def patch(self, student_id):
-        user_id = get_jwt_identity()
+        user_id = get_jwt_identity()['id']
         admin =  User.query.get_or_404(user_id)
         if admin.role != 5:
             error = {
