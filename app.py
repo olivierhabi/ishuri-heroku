@@ -9,6 +9,7 @@ import jsonpickle
 import os
 from dotenv import load_dotenv
 from resources.super import post
+from flask_cors import CORS
 
 
 # load dotenv in the base root
@@ -20,6 +21,7 @@ consumer_key = os.getenv('SQLALCHEMY_DATABASE_URI')
 secret_key = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] =  str(consumer_key)
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['PROPAGATE_EXCEPTIONS'] = True
