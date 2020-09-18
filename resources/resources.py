@@ -46,7 +46,7 @@ class UserListResource(Resource):
                     }
                     return errors, 401
 
-                parent = User.query.all()
+                parent = User.query.filter(User.school_id == super.school_id).filter(User.role == 2).all()
                 return  parents_schema.dump(parent)
 
             if "student" in request_header:
@@ -113,7 +113,7 @@ class UserListResource(Resource):
                     }
                     return errors, 401
 
-                classes = Classes.query.all()
+                classes = Classes.query.filter(Classes.school_id == super.school_id).all()
                 return classes_schema.dump(classes)
 
 
@@ -135,7 +135,7 @@ class UserListResource(Resource):
                     }
                     return errors, 401
 
-                teacher = User.query.all()
+                teacher = User.query.filter(User.school_id == super.school_id).filter(User.role == 3).all()
                 return teachers_schema.dump(teacher)
                 
             elif "headteacher" in request_header:
@@ -156,7 +156,7 @@ class UserListResource(Resource):
                     }
                     return errors, 401
 
-                head_teacher = User.query.all()
+                head_teacher = User.query.filter(User.school_id == super.school_id).filter(User.role == 4).all()
                 return head_teachers_schema.dump(head_teacher)
 
 
@@ -181,7 +181,7 @@ class UserListResource(Resource):
 
 
 
-                libralians = User.query.all()
+                libralians = User.query.filter(User.school_id == super.school_id).filter(User.role == 7).all()
                 return  libralians_schema.dump(libralians)
 
             elif "admin" in request_header:
@@ -196,7 +196,8 @@ class UserListResource(Resource):
                     return error, 403
 
 
-                admin = User.query.all()
+                admin = User.query.filter(User.role == 5).all()
+                
                 return  admins_schema.dump(admin)
 
 
@@ -212,8 +213,9 @@ class UserListResource(Resource):
                     return error, 403
                 
 
-                supers = User.query.all()
+                supers = User.query.filter(User.role == 6).all()
                 return super_admins_schema.dump(supers)
+
             elif "school" in request_header:
                 user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
@@ -245,7 +247,7 @@ class UserListResource(Resource):
                 }
                 return errors, 
         except:
-            session.rollback()
+            db.session.rollback()
 
 
     @jwt_required
@@ -289,7 +291,7 @@ class UserListResource(Resource):
                     }
                     return errors, 400
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             
@@ -349,7 +351,7 @@ class UserListResource(Resource):
                     }
                     return errors, 400
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             elif "libralian" in request_header:
@@ -415,7 +417,7 @@ class UserListResource(Resource):
                     }
                     return errors, 400
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             elif "parent" in request_header:
@@ -439,7 +441,7 @@ class UserListResource(Resource):
                 
                 try:
                     body = request.get_json()
-                    role = 5
+                    role = 2
                     new_parent = User(
                         name = request.json['name'],
                         email = request.json['email'],
@@ -486,7 +488,7 @@ class UserListResource(Resource):
             
             
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             elif "no_teacher" in request_header:
@@ -551,7 +553,7 @@ class UserListResource(Resource):
                     }
                     return errors, 400
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             elif "headteacher" in request_header:
@@ -617,7 +619,7 @@ class UserListResource(Resource):
                         return errors, 400
 
                     except:
-                        session.rollback()
+                        db.session.rollback()
                         raise
                     
 
@@ -666,7 +668,7 @@ class UserListResource(Resource):
                     return errors, 400
 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             elif "term" in request_header:
@@ -722,7 +724,7 @@ class UserListResource(Resource):
                         }
                         return errors, 400
                     except:
-                        session.rollback()
+                        db.session.rollback()
                         raise
                 except:
                     errors = {
@@ -782,7 +784,7 @@ class UserListResource(Resource):
                         return errors, 400
                     
                     except:
-                        session.rollback()
+                        db.session.rollback()
                         raise
 
                 except:
@@ -844,7 +846,7 @@ class UserListResource(Resource):
                         return errors, 400
                     
                     except:
-                        session.rollback()
+                        db.session.rollback()
                         raise
 
                 except:
@@ -942,7 +944,7 @@ class UserListResource(Resource):
                     return {"status": 400, "message": " 'NoneType Error' Expected object got nothing" }, 400
 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
         
             else:
@@ -989,6 +991,12 @@ class UserResource(Resource):
                     return errors, 403
 
                 parent = User.query.get_or_404(req_id)
+                if parent.role != 2:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Parent"
+                    }
+                    return error, 400
                 return parent_schema.dump(parent)
 
             if "student" in request_header:
@@ -1010,6 +1018,12 @@ class UserResource(Resource):
                     return errors, 403
 
                 student = User.query.get_or_404(req_id)
+                if student.role != 1:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Student"
+                    }
+                    return error, 400
                 return student_schema.dump(student)
 
 
@@ -1075,6 +1089,12 @@ class UserResource(Resource):
                     return errors, 403
 
                 teacher = User.query.get_or_404(req_id)
+                if teacher.role != 3:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Teacher"
+                    }
+                    return error, 400
                 return teacher_schema.dump(teacher)
 
             if "libralian" in request_header:
@@ -1096,6 +1116,12 @@ class UserResource(Resource):
                     return errors, 403
 
                 library = User.query.get_or_404(req_id)
+                if student.role != 7:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Libralian"
+                    }
+                    return error, 400
                 return libralian_schema.dump(library)
 
             elif "superuser" in request_header:
@@ -1108,16 +1134,16 @@ class UserResource(Resource):
                     }
                     return error, 403
                 
-                school = School.query.get_or_404(super.school_id)
-                if school.activation == 0:
-                    errors = {
-                        "status": 403,
-                        "message": "Action Blocked contact your administrator"
-                    }
-                    return errors, 403
 
                 super = User.query.get_or_404(req_id)
+                if super.role != 6:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Super User"
+                    }
+                    return error, 400
                 return super_schema.dump(super)
+
             elif "school" in request_header:
                 user_id = get_jwt_identity()['id']
                 super = User.query.get_or_404(user_id)
@@ -1176,6 +1202,12 @@ class UserResource(Resource):
 
 
                 admin = User.query.get_or_404(req_id)
+                if admin.role != 5:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Admin"
+                    }
+                    return error, 400
                 return admin_schema.dump(admin)
 
             elif "headteacher" in request_header:
@@ -1197,6 +1229,14 @@ class UserResource(Resource):
                     return errors, 403
 
                 head_teacher = User.query.get_or_404(req_id)
+                
+                if head_teacher.role != 4:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Head Teacher"
+                    }
+                    return error, 400
+
                 return head_teacher_schema.dump(head_teacher)
 
             else:
@@ -1241,11 +1281,28 @@ class UserResource(Resource):
 
                     parent = User.query.get_or_404(req_id)
 
+                    if parent.role != 2:
+                        error = {
+                            "status": 400,
+                            "message": "User is not Parent"
+                        }
+                    return error, 400
+
                     if 'name' in request.json:
                         parent.name = request.json['name']
                     
                     if 'student_id' in request.json:
                         parent.student_id = request.json['student_id']
+                    
+                    if 'email' in request.json:
+                        user = User.query.filter_by(email = request.json['email']).first()
+                        if user:
+                            errors = {
+                                "status": 400,
+                                "message": "Email was taken try another"
+                            }
+                            return errors, 400
+                        parent.email = request.json['email']
 
                     if 'password' in request.json:
                         if not 'current_password' in request.json:
@@ -1279,7 +1336,7 @@ class UserResource(Resource):
                     return errors, 400
 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
 
@@ -1306,8 +1363,25 @@ class UserResource(Resource):
 
                     student = User.query.get_or_404(req_id)
 
+                    if student.role != 1:
+                        error = {
+                            "status": 400,
+                            "message": "User is not Student"
+                        }
+                        return error, 400
+
                     if 'name' in request.json:
                         student.name = request.json['name']
+
+                    if 'email' in request.json:
+                        user = User.query.filter_by(email = request.json['email']).first()
+                        if user:
+                            errors = {
+                                "status": 400,
+                                "message": "Email was taken try another"
+                            }
+                            return errors, 400
+                        student.email = request.json['email']
                     
                     if 'class_id' in request.json:
                         student.class_id = request.json['class_id']
@@ -1344,7 +1418,7 @@ class UserResource(Resource):
                     return errors, 400
                 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
 
@@ -1429,7 +1503,21 @@ class UserResource(Resource):
                 try:
                     teacher = User.query.get_or_404(req_id)
 
+                    if teacher.role != 3:
+                        error = {
+                            "status": 400,
+                            "message": "User is not Teacher"
+                        }
+                    return error, 400
+
                     if 'email' in request.json:
+                        user = User.query.filter_by(email = request.json['email']).first()
+                        if user:
+                            errors = {
+                                "status": 400,
+                                "message": "Email was taken try another"
+                            }
+                            return errors, 400
                         teacher.email = request.json['email']
 
                     if 'phone' in request.json:
@@ -1465,7 +1553,7 @@ class UserResource(Resource):
                     return errors, 400
                 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             if "headteacher" in request_header:
@@ -1489,7 +1577,21 @@ class UserResource(Resource):
                 try:
                     head_teacher = User.query.get_or_404(req_id)
 
+                    if head_teacher.role != 4:
+                        error = {
+                            "status": 400,
+                            "message": "User is not Head Teacher"
+                        }
+                    return error, 400
+
                     if 'email' in request.json:
+                        user = User.query.filter_by(email = request.json['email']).first()
+                        if user:
+                            errors = {
+                                "status": 400,
+                                "message": "Email was taken try another"
+                            }
+                            return errors, 400
                         head_teacher.email = request.json['email']
 
                     if 'phone' in request.json:
@@ -1525,7 +1627,7 @@ class UserResource(Resource):
                     return errors, 400
 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             if "libralian" in request_header:
@@ -1550,7 +1652,21 @@ class UserResource(Resource):
                 try:
                     library = User.query.get_or_404(req_id)
 
+                    if library.role != 7:
+                        error = {
+                            "status": 400,
+                            "message": "User is not Librarian"
+                        }
+                    
+
                     if 'email' in request.json:
+                        user = User.query.filter_by(email = request.json['email']).first()
+                        if user:
+                            errors = {
+                                "status": 400,
+                                "message": "Email was taken try another"
+                            }
+                            return errors, 400
                         library.email = request.json['email']
 
                     if 'phone' in request.json:
@@ -1586,7 +1702,7 @@ class UserResource(Resource):
                     return errors, 400
 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
 
@@ -1606,7 +1722,20 @@ class UserResource(Resource):
                 try:
                     admin= User.query.get_or_404(req_id)
 
+                    if admin.role != 5:
+                        error = {
+                            "status": 400,
+                            "message": "User is not Admin"
+                        }
+
                     if 'email' in request.json:
+                        user = User.query.filter_by(email = request.json['email']).first()
+                        if user:
+                            errors = {
+                                "status": 400,
+                                "message": "Email was taken try another"
+                            }
+                            return errors, 400
                         admin.email = request.json['email']
 
                     if 'phone' in request.json:
@@ -1642,7 +1771,7 @@ class UserResource(Resource):
                     return errors, 400
 
                 except:
-                    session.rollback()
+                    db.session.rollback()
                     raise
 
             if "term" in request_header:
@@ -1702,7 +1831,20 @@ class UserResource(Resource):
 
                 super= User.query.get_or_404(req_id)
 
+                if library.role != 6:
+                    error = {
+                        "status": 400,
+                        "message": "User is not Superuser"
+                    }
+
                 if 'email' in request.json:
+                    user = User.query.filter_by(email = request.json['email']).first()
+                    if user:
+                        errors = {
+                            "status": 400,
+                            "message": "Email was taken try another"
+                        }
+                        return errors, 400
                     super.email = request.json['email']
 
                 if 'phone' in request.json:
@@ -1895,6 +2037,21 @@ class UserResource(Resource):
 
 
                 user =  User.query.get_or_404(req_id)
+
+                if user.role == 6:
+                    errors = {
+                        "status": 403,
+                        "message": "This is Super Admin You can not Perform this action"
+                    }
+                    return errors, 403
+
+                if user.school_id != admin.school_id:
+                    errors = {
+                        "status": 403,
+                        "message": "This is User doesn't belong in your school"
+                    }
+                    return errors, 403
+
                 user.activation = 1
                 db.session.commit()
                 return user_schema.dump(user)
@@ -1921,6 +2078,23 @@ class UserResource(Resource):
 
 
                 user =  User.query.get_or_404(req_id)
+
+                if user.role == 6:
+                    errors = {
+                        "status": 403,
+                        "message": "This is Super Admin You can not Perform this action"
+                    }
+                    return errors, 403
+
+                if user.school_id != admin.school_id:
+                    errors = {
+                        "status": 403,
+                        "message": "This is User doesn't belong in your school"
+                    }
+                    return errors, 403
+
+
+
                 user.activation = 0
                 db.session.commit()
                 return user_schema.dump(user)
@@ -1992,7 +2166,7 @@ class UserResource(Resource):
             return errors, 400
             
         except:
-            session.rollback()
+            db.session.rollback()
             raise
 
 

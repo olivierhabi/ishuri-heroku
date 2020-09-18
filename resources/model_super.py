@@ -242,7 +242,6 @@ admission_letters_schema = AdmissionLetterSchema(many=True)
 # 5: School Admin
 # 6: Super User
 # 7: Librarian
-# 8: Pref "add"
 
 #ACTIVATION CODE
 
