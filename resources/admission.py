@@ -3,7 +3,7 @@ from flask import Flask, request
 from .model_super import School, User, Admission
 from .model_super import db
 from sqlalchemy import exc
-from .model_super import admission_schema, admissions_schema
+from .model_super import admission_schema, admissions_schema, schools_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
 from flask_bcrypt import generate_password_hash, check_password_hash
 import datetime
@@ -135,4 +135,9 @@ class AdmissionResource(Resource):
                     "message": "Invalid Foreign Key"
             }
             return errors, 400
+
+class GetSchools(Resource):
+    def get(self):
+        schools = School.query.all()
+        return  schools_schema.dump(schools)
 
